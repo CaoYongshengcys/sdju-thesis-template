@@ -1,0 +1,139 @@
+\ProvidesFile{sdjuthesis-bachelor.ltx}
+  [2026/05/09 1.0.0 Shanghai Dianji University Bachelor Thesis Template]
+
+\sdju@def@label{degreetypeChi}{学士}
+\sdju@def@label{degreetypeEng}{Bachelor}
+\sdju@def@label{degreecategory}{学位类别}
+\sdju@def@label{thesistitle}{论文题目}
+\sdju@def@label{major}{专\quad 业}
+\sdju@def@label{author}{作者姓名}
+\sdju@def@label{supervisor}{指导老师}
+\sdju@def@label{finisheddate}{完成日期}
+\sdju@def@label{college}{学\quad 院}
+\def\sdju@label@thesistype{}
+\sdju@def@label{subject}{%
+	\sdju@label@schoolChi 毕业设计（论文）
+}
+
+\geometry{%
+  paper      = a4paper,
+  top        = 2.8cm,
+  bottom     = 2.5cm,
+  left       = 2.5cm,
+  right      = 2.5cm,
+  headheight = 0.5cm,
+  headsep    = 0.3cm,
+  footskip   = 1.0cm,
+}
+
+\fancypagestyle{sdju@title}{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+\fancypagestyle{sdju@plain}{%
+  \fancyhf{}
+  \fancyhead[C]{\zihao{-5}\sdju@label@schoolChi 毕业设计（论文）}
+  \fancyfoot[C]{\small ~{\thepage}~}
+}
+\renewcommand{\frontmatter}{%
+  \cleardoublepage
+  \@mainmatterfalse
+  \pagenumbering{Roman}
+  \pagestyle{sdju@plain}
+}
+\renewcommand{\mainmatter}{%
+  \cleardoublepage
+  \@mainmattertrue
+  \sdju@setfloatfonttrue
+  \pagenumbering{arabic}
+  \pagestyle{sdju@plain}
+}
+\renewcommand{\backmatter}{%
+  \cleardoublepage
+  \@mainmatterfalse
+}
+
+\renewcommand{\cftchapfont}{\bfseries\heiti}
+\renewcommand{\cftchapleader}{\normalfont\cftdotfill{\cftdotsep}}
+
+\NewDocumentEnvironment{abstract}{}{%
+  \cleardoublepage
+  \chapter*{%
+    \begingroup
+      \normalfont\zihao{3}\heiti\sdju@label@abstractChi
+    \endgroup
+  }
+  \addcontentsline{toc}{chapter}{\sdju@label@abstractChi}
+  \vskip 2ex
+  \@mkboth{\sdju@label@abstractChi}%
+          {\sdju@label@abstractChi}%
+  \zihao{-4}
+}{%
+  \vskip 3ex \noindent
+  \begingroup
+    \heiti\sdju@label@keywordsChi
+  \endgroup
+  \begingroup
+    \sdju@value@keywords
+  \endgroup
+}
+
+\NewDocumentEnvironment{enabstract}{}{%
+  \cleardoublepage
+  \chapter*{%
+    \begingroup
+      \normalfont\zihao{3}\bfseries\sdju@label@abstractEng
+    \endgroup
+  }
+  \addcontentsline{toc}{chapter}{\sdju@label@abstractEng}
+  \vskip 2ex
+  \@mkboth{\sdju@label@abstractEng}%
+          {\sdju@label@abstractEng}%
+  \zihao{-4}
+}{%
+  \vskip 3ex \noindent
+  \begingroup
+    \bfseries\sdju@label@keywordsEng
+  \endgroup
+  \begingroup
+    \sdju@value@enkeywords
+  \endgroup
+}
+
+\RenewDocumentCommand\maketitle{}{%
+  \pdfbookmark[0]{封面}{titlepage}
+  \sdju@maketitle%
+}
+\newcommand{\sdju@maketitle}{%
+  \cleardoublepage
+  \thispagestyle{sdju@title}
+  \begin{center}
+    \vspace*{21mm}
+    \includegraphics[width=97mm]{sdju-name}
+
+    \vskip 25mm
+    {\fontsize{40bp}{48bp}\selectfont\sdjuyahei 学士学位论文}
+
+    \vskip 20mm
+    {\fontsize{24bp}{32bp}\selectfont\sdjuyahei \sdju@value@title}
+
+    \vskip 35mm
+
+    \begingroup
+      \fontsize{16bp}{21bp}\selectfont\songti
+      \begin{tabular}{r@{\quad}l}
+        学生姓名：   & \makebox[62mm][c]{\sdju@value@author} \\
+        学\quad 号： & \makebox[62mm][c]{\sdju@value@studentid} \\
+        专\quad 业： & \makebox[62mm][c]{\sdju@value@major} \\
+        指导老师：   & \makebox[62mm][c]{\sdju@value@supervisor} \\
+        学\quad 院： & \makebox[62mm][c]{\sdju@value@college} \\
+      \end{tabular}
+    \endgroup
+
+    \vskip 16mm
+
+    {\fontsize{16bp}{24bp}\selectfont\songti \sdju@value@finisheddate}
+  \end{center}
+  \cleardoublepage
+}

@@ -1,0 +1,46 @@
+\documentclass[degree=master, language=chinese, review=false, oneside, AutoFakeBold]{sdjuthesis}
+
+\usepackage{sdjuthesis}
+
+\graphicspath{{figures/}, {images/}}
+\DeclareGraphicsExtensions{.pdf, .eps, .png, .jpg, .jpeg}
+
+\addbibresource{sdju-thesis.bib}
+
+\input{tex/sdju-information}
+
+\begin{document}
+
+	\maketitle
+	\makeDeclareOriginality
+	\makeDeclareAuthorization
+
+	\frontmatter
+
+	\input{tex/sdju-abstract}
+
+	\tableofcontents
+	\listoffigures
+	\listoftables
+
+	\mainmatter
+
+	\input{tex/sdju-introduction}
+	\input{tex/sdju-chapter2}
+	\input{tex/sdju-chapter3}
+	\input{tex/sdju-chapter4}
+	\input{tex/sdju-chapter5}
+	\input{tex/sdju-conclusion}
+
+	\input{tex/sdju-acknowledgements}
+
+	\printbibliography[heading=bibintoc, title={参考文献}]
+
+	\appendix
+	\input{tex/sdju-appendix}
+
+	\backmatter
+
+	\input{tex/sdju-achievements}
+
+\end{document}

@@ -1,0 +1,46 @@
+\chapter{附录：实验数据与代码}
+
+\section{实验环境}
+
+本文实验所使用的软硬件环境如表~\ref{tab:env}所示。
+
+\begin{table}[htbp]
+	\centering
+	\caption{实验环境配置}
+	\label{tab:env}
+	\begin{tabular}{cc}
+		\toprule
+		项目 & 配置 \\
+		\midrule
+		操作系统 & Ubuntu 20.04 LTS \\
+		CPU & Intel Core i9-12900K \\
+		GPU & NVIDIA RTX 3090 (24GB) \\
+		内存 & 64GB DDR4 \\
+		Python & 3.9 \\
+		PyTorch & 1.12.1 \\
+		CUDA & 11.6 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\section{超参数设置}
+
+模型训练的主要超参数设置如表~\ref{tab:hyperparams}所示。
+
+\begin{table}[htbp]
+	\centering
+	\caption{模型训练超参数设置}
+	\label{tab:hyperparams}
+	\begin{tabular}{cc}
+		\toprule
+		超参数 & 取值 \\
+		\midrule
+		学习率 & 0.001 \\
+		批大小 & 64 \\
+		训练轮数 & 100 \\
+		优化器 & Adam \\
+		学习率衰减 & StepLR (step=30, $\gamma$=0.1) \\
+		正则化系数$\lambda$ & 0.0001 \\
+		\bottomrule
+	\end{tabular}
+\end{table}

@@ -1,0 +1,61 @@
+\chapter{基于多尺度特征融合的电机故障诊断方法}
+
+\section{问题分析}
+
+不同类型的电机故障在振动信号中表现出不同的尺度特征。例如，轴承局部故障产生高频冲击信号，而转子不平衡则表现为低频振动。单一尺度的特征提取难以充分描述不同故障的特征，影响诊断精度。
+
+\section{多尺度特征融合网络设计}
+
+\subsection{网络总体结构}
+
+本文设计了一种多尺度特征融合网络（MSFF-Net），其核心思想是利用不同大小的卷积核提取不同尺度的特征，并通过特征融合模块将多尺度特征进行有效整合。
+
+\subsection{多尺度特征提取模块}
+
+多尺度特征提取模块采用并行结构，使用三种不同大小的卷积核（$K=3, 5, 7$）分别提取不同尺度的特征：
+
+\begin{equation}
+	\mathbf{h}_k^{(l)} = \text{Conv1D}_{K=k}\left(\mathbf{h}^{(l-1)}\right), \quad k \in \{3, 5, 7\}
+	\label{eq:multiscale}
+\end{equation}
+
+\subsection{特征融合模块}
+
+特征融合模块将不同尺度的特征进行拼接和加权融合：
+
+\begin{equation}
+	\mathbf{h}_{fused}^{(l)} = \sum_{k \in \{3,5,7\}} \alpha_k \cdot \mathbf{h}_k^{(l)}
+	\label{eq:fusion}
+\end{equation}
+
+其中$\alpha_k$为可学习的注意力权重，满足$\sum_k \alpha_k = 1$。
+
+\section{实验结果与分析}
+
+\subsection{实验设置}
+
+在CWRU数据集和江南大学轴承数据集上分别进行实验，验证MSFF-Net的有效性。
+
+\subsection{对比实验结果}
+
+\begin{table}[htbp]
+	\centering
+	\caption{不同方法在两个数据集上的诊断准确率(\%)}
+	\label{tab:msff_results}
+	\begin{tabular}{ccc}
+		\toprule
+		方法 & CWRU & 江南大学 \\
+		\midrule
+		标准CNN & 97.3 & 91.2 \\
+		多分支CNN & 98.1 & 93.5 \\
+		ResNet-1D & 97.8 & 92.8 \\
+		本文MSFF-Net & 99.2 & 95.6 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+实验结果表明，本文提出的MSFF-Net在两个数据集上均取得了最优的诊断准确率，在CWRU数据集上达到99.2\%，在江南大学数据集上达到95.6\%，验证了多尺度特征融合策略的有效性。
+
+\section{本章小结}
+
+本章提出了基于多尺度特征融合的电机故障诊断方法，设计MSFF-Net网络结构，利用不同大小的卷积核提取多尺度特征，并通过注意力机制进行特征融合。实验结果表明，该方法在两个数据集上均取得了优于对比方法的诊断精度。

@@ -1,0 +1,63 @@
+\chapter{基于CNN的端到端电机故障诊断方法}
+
+\section{方法概述}
+
+传统的电机故障诊断方法需要先进行人工特征提取，再利用分类器进行故障识别，特征提取的好坏直接影响诊断性能。本章提出一种基于卷积神经网络的端到端故障诊断方法，直接从原始振动信号中自动学习故障特征，实现从原始信号到故障类别的端到端诊断。
+
+\section{网络结构设计}
+
+针对一维振动信号的特点，本文设计了一维CNN网络结构，主要包括以下模块：
+
+\subsection{输入层}
+
+输入为原始振动信号序列$\mathbf{x} = [x_1, x_2, \ldots, x_T]$，其中$T$为信号长度。为了适应不同长度的信号，采用滑动窗口方式对信号进行分段处理。
+
+\subsection{特征提取模块}
+
+特征提取模块由多个卷积块级联组成，每个卷积块包含一维卷积层、批归一化层、ReLU激活函数和最大池化层：
+
+\begin{equation}
+	\mathbf{h}^{(l)} = \text{MaxPool}\left(\text{ReLU}\left(\text{BN}\left(\mathbf{W}^{(l)} * \mathbf{h}^{(l-1)} + \mathbf{b}^{(l)}\right)\right)\right)
+	\label{eq:convblock}
+\end{equation}
+
+其中，$\mathbf{W}^{(l)}$和$\mathbf{b}^{(l)}$为第$l$层卷积核权重和偏置，BN为批归一化操作，$*$为卷积运算。
+
+\subsection{分类模块}
+
+分类模块由全局平均池化层和全连接层组成，输出各故障类别的概率分布：
+
+\begin{equation}
+	\hat{y} = \text{softmax}\left(\mathbf{W}_{fc} \cdot \text{GAP}(\mathbf{h}^{(L)}) + \mathbf{b}_{fc}\right)
+	\label{eq:classifier}
+\end{equation}
+
+\section{实验设置与结果分析}
+
+\subsection{数据集}
+
+采用凯斯西储大学（CWRU）轴承数据集进行实验验证。该数据集包含正常、外圈故障、内圈故障和滚动体故障四种类别，故障直径分别为0.1778mm、0.3556mm和0.5334mm，共10种状态。
+
+\subsection{实验结果}
+
+\begin{table}[htbp]
+	\centering
+	\caption{不同方法在CWRU数据集上的诊断准确率}
+	\label{tab:cnn_results}
+	\begin{tabular}{ccc}
+		\toprule
+		方法 & 输入 & 准确率(\%) \\
+		\midrule
+		SVM + 人工特征 & 统计特征 & 89.2 \\
+		RF + 人工特征 & 统计特征 & 91.5 \\
+		DNN & 原始信号 & 93.8 \\
+		本文CNN & 原始信号 & 97.3 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+实验结果表明，本文提出的CNN方法在CWRU数据集上达到了97.3\%的诊断准确率，优于传统的SVM和RF方法，验证了端到端学习方法的有效性。
+
+\section{本章小结}
+
+本章提出了基于CNN的端到端电机故障诊断方法，设计了一维CNN网络结构，直接从原始振动信号中学习故障特征。实验结果表明，该方法在CWRU数据集上取得了97.3\%的诊断准确率，优于传统方法。
