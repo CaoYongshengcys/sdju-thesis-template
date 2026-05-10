@@ -8,20 +8,20 @@
 
 \subsection{单个图形}
 
-图要有图注，并置于图的编号之后，图的编号和图注应置于图下方的居中位置。引用图应在图题右上角标出文献来源。当插图中组成部件由数字或字母等编号表示时，可在插图下方添加图注进行说明，如图~\ref{fig:shmtu-school-motto} 所示。一般来说，研究生图注与表注一般要求中英文对照。但是由于上海海事大学没有明确要求，故推荐仅使用中文图注。若有需要添加双语图注，用法如图~\ref{fig:shmtu-school-motto-2}所示。
+图要有图注，并置于图的编号之后，图的编号和图注应置于图下方的居中位置。引用图应在图题右上角标出文献来源。当插图中组成部件由数字或字母等编号表示时，可在插图下方添加图注进行说明，如图~\ref{fig:sdju-school-motto} 所示。若有需要添加双语图注，用法如图~\ref{fig:sdju-school-motto-2}所示。
 
 \begin{figure}[!htp]
 	\centering
-	\includegraphics[width=10cm]{shmtu-school-motto}
-	\caption{王伯群校长与吴淞商船校训}
-	\label{fig:shmtu-school-motto}
+	\includegraphics[width=10cm]{sdju-badge}
+	\caption{上海电机学院校徽}
+	\label{fig:sdju-school-motto}
 \end{figure}
 
 \begin{figure}[!htp]
 	\centering
-	\includegraphics[width=10cm]{shmtu-school-motto}
-	\bicaption{王伯群校长与吴淞商船校训}{President Wang Boqun and the school motto of WuSong Merchant Shipping}
-	\label{fig:shmtu-school-motto-2}
+	\includegraphics[width=10cm]{sdju-badge}
+	\bicaption{上海电机学院校徽}{Shanghai Dianji University Badge}
+	\label{fig:sdju-school-motto-2}
 \end{figure}
 
 \subsection{多个图形}
@@ -30,10 +30,10 @@
 
 \begin{figure}[!htp]
   \centering
-  \includegraphics[height=2cm]{images/shmtu-badge}
+  \includegraphics[height=2cm]{images/sdju-badge}
   \hspace{1cm}
-  \includegraphics[height=2cm]{images/shmtu-badge}
-  \caption{上海海事大学校徽}
+  \includegraphics[height=2cm]{images/sdju-badge}
+  \caption{上海电机学院校徽}
   \label{fig:parallel-1}
 \end{figure}
 
@@ -42,14 +42,14 @@
 \begin{figure}[!htp]
   \begin{minipage}{0.48\textwidth}
   	\centering
-    \includegraphics[height=1.5cm]{images/shmtu-badge}
+    \includegraphics[height=1.5cm]{images/sdju-badge}
     \caption{并排第一个图}
     \label{fig:parallel-2-1}
   \end{minipage}
   \hfill
   \begin{minipage}{0.48\textwidth}
     \centering
-    \includegraphics[height=1.5cm]{images/shmtu-badge}
+    \includegraphics[height=1.5cm]{images/sdju-badge}
     \caption{并排第二个图}
     \label{fig:parallel-2-2}
   \end{minipage}
@@ -58,19 +58,19 @@
 如果要为共用一个计数器的多个子图添加子图注，那么使用\cs{subcaptionbox}（双语图注使用\cs{bisubcaptionbox}）并排子图，子图注置于子图之下，子图号用 (a)、(b)、(c)等表示。如图~\ref{fig:subcaptionbox}、图~\ref{fig:subcaptionbox-a}、图~\ref{fig:subcaptionbox-b}、图~\ref{fig:subcaptionbox-c}所示。
 
 \begin{figure}[!htp]
-  \subcaptionbox{上海海事大学校徽\label{fig:subcaptionbox-a}}%
+  \subcaptionbox{上海电机学院校徽\label{fig:subcaptionbox-a}}%
 	[0.5\textwidth]{%
-	  \includegraphics[height=1.5cm]{images/shmtu-badge}
+	  \includegraphics[height=1.5cm]{images/sdju-badge}
 	}
   \hfill
-  \subcaptionbox{上海海事大学校名\label{fig:subcaptionbox-b}}%
+  \subcaptionbox{上海电机学院校名\label{fig:subcaptionbox-b}}%
     [0.5\textwidth]{%
-	  \includegraphics[width=0.5\textwidth]{images/shmtu-name}
+	  \includegraphics[width=0.5\textwidth]{images/sdju-name}
 	}
   \hfill
-  \subcaptionbox{上海海事大学校徽\label{fig:subcaptionbox-c}}%
+  \subcaptionbox{上海电机学院校徽\label{fig:subcaptionbox-c}}%
     [\textwidth]{%
-	  \includegraphics[height=1.5cm]{images/shmtu-badge}
+	  \includegraphics[height=1.5cm]{images/sdju-badge}
   }
   \caption{共用一个计数器的多个子图图注}
   \label{fig:subcaptionbox}

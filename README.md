@@ -1,12 +1,12 @@
-# 欢迎使用  上海海事大学 LaTeX 学位论文模板(SHMTUThesis - LaTeX )
+# 欢迎使用  上海电机学院 LaTeX 学位论文模板(SDJUThesis - LaTeX )
 
-> 本项目是上海海事大学学位论文（<font color="red">非官方</font>）LaTeX 模板文档。
+> 本项目是上海电机学院学位论文（<font color="red">非官方</font>）LaTeX 模板文档。
 >
 > 目前该模板仅适用于*信息工程学院*的**硕士生**。（未参考其他学院的论文要求）
 
 ## 项目介绍
 
-&emsp; &emsp; 本项目模板文档是基于 LaTeX 语法编写，模板格式参考了过往硕士毕业生的学位论文以及《上海海事大学学位论文与摘要的统一要求》。
+&emsp; &emsp; 本项目模板文档是基于 LaTeX 语法编写，模板格式参考了过往硕士毕业生的学位论文以及《上海电机学院学位论文与摘要的统一要求》。
 
 &emsp; &emsp; 本模板的示例文件中包含了排版中常用的例子，其中包括公式、表格、算法、参考文献等，用户可以参考或者直接基于此示例文档撰写论文。模板预览效果参看[`main.pdf`](https://github.com/hellckt/SHMTUThesis/blob/master/main.pdf)。
 
@@ -117,7 +117,7 @@
 
 ## 软件许可证
 
-- 本项目中所使用到的上海海事大学校徽、校名图片（`shmtu-badge.jpg` 等）的版权归上海海事大学所有；
-- `shmtuthesis.cls` 文档类与相关附属文件使用 [LPPL](https://www.latex-project.org/lppl.txt) 授权；
+- 本项目中所使用到的上海电机学院校徽、校名图片（`sdju-badge.png` 等）的版权归上海电机学院所有；
+- `sdjuthesis.cls` 文档类与相关附属文件使用 [LPPL](https://www.latex-project.org/lppl.txt) 授权；
 - 其他部分使用 [Apache License 2.0](https://github.com/hellckt/SHMTUThesis/blob/master/LICENSE) 授权。
 
