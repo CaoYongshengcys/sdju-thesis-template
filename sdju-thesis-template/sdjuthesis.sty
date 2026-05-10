@@ -1,0 +1,35 @@
+\ProvidesPackage{sdjuthesis}
+  [2026/05/09 1.0.0 Shanghai Dianji University Bachelor Thesis Template]
+
+\RequirePackage{zhlipsum}
+\RequirePackage{lipsum}
+
+\RequirePackage{tabularx}
+
+\RequirePackage{ulem}
+
+\RequirePackage{setspace}
+
+\RequirePackage{multirow}
+
+\RequirePackage{dcolumn}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+
+\RequirePackage{threeparttable}
+
+\RequirePackage{siunitx}
+\sisetup{
+  detect-all,
+  group-minimum-digits = 4,
+  separate-uncertainty = true,
+  inter-unit-product   = \ensuremath{{}\cdot{}},
+  list-final-separator = { 和 },
+  list-pair-separator  = { 和 },
+  range-phrase         = {～},
+}
+
+\RequirePackage{xeCJKfntef}
+
+\RequirePackage{hologo}
+\newcommand{\XeTeX}{\hologo{XeTeX}}
+\newcommand{\BibLaTeX}{\textsc{Bib}\LaTeX}

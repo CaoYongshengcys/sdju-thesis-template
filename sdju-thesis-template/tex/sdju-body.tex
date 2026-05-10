@@ -1,0 +1,106 @@
+\chapter{DME均质压燃燃烧数值模拟方法}
+
+\section{计算模型}
+
+本文采用单区模型对DME均质压燃燃烧过程进行数值模拟。单区模型假设气缸内的混合气是均匀的，具有相同的温度、压力和浓度。
+
+\subsection{基本假设}
+
+单区模型的基本假设如下：
+
+\begin{enumerate}
+	\item 气缸内混合气均匀分布，各处温度、压力和浓度相同；
+	\item 混合气视为理想气体；
+	\item 不考虑气缸壁面的传热损失（或采用简单的传热模型修正）；
+	\item 化学反应遵循详细化学反应动力学机理。
+\end{enumerate}
+
+\subsection{控制方程}
+
+单区模型的能量守恒方程为：
+
+\begin{equation}
+	\frac{dT}{dt} = -\frac{p}{\rho c_v}\frac{dV}{dt} - \frac{1}{\rho c_v}\sum_i h_i \dot{\omega}_i
+	\label{eq:energy}
+\end{equation}
+
+其中，$T$为温度，$p$为压力，$\rho$为密度，$c_v$为定容比热，$V$为气缸容积，$h_i$为第$i$种组分的焓，$\dot{\omega}_i$为第$i$种组分的生成速率。
+
+各组分的质量守恒方程为：
+
+\begin{equation}
+	\frac{dY_i}{dt} = \frac{\dot{\omega}_i M_i}{\rho}
+	\label{eq:species}
+\end{equation}
+
+其中，$Y_i$为第$i$种组分的质量分数，$M_i$为第$i$种组分的摩尔质量。
+
+\section{DME化学反应动力学机理}
+
+本文采用美国Lawrence Livermore国家实验室（LLNL）提出的DME详细化学反应动力学机理。该机理包含79个物种和399个基元反应，能够准确描述DME的低温氧化和高温燃烧过程。
+
+\subsection{低温氧化反应}
+
+DME的低温氧化反应主要包括以下步骤：
+
+\begin{enumerate}
+	\item DME与OH自由基反应生成CH$_3$OCH$_2$自由基；
+	\item CH$_3$OCH$_2$与O$_2$反应生成CH$_3$OCH$_2$O$_2$；
+	\item CH$_3$OCH$_2$O$_2$发生异构化反应，生成CH$_2$OCH$_2$O$_2$H；
+	\item 链分支反应导致低温放热。
+\end{enumerate}
+
+\section{壁面传热模型}
+
+为考虑壁面传热对HCCI燃烧的影响，本文在HCT程序中加入了Woschni传热模型：
+
+\begin{equation}
+	h_c = 3.26 B^{-0.2} p^{0.8} T^{-0.55} w^{0.8}
+	\label{eq:woschni}
+\end{equation}
+
+其中，$h_c$为传热系数，$B$为气缸直径，$p$为缸内压力，$T$为缸内温度，$w$为平均气体速度。
+
+\section{计算结果与分析}
+
+\subsection{压缩比的影响}
+
+图\ref{fig:cr_effect}给出了不同压缩比下缸内温度和压力随曲轴转角的变化曲线。从图中可以看出，随着压缩比的增加，着火时刻提前，缸内峰值温度和压力升高。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{images/sdju-badge}
+	\caption{不同压缩比下缸内温度随曲轴转角的变化}
+	\label{fig:cr_effect}
+\end{figure}
+
+\subsection{当量比的影响}
+
+表\ref{tab:equivalence}给出了不同当量比下HCCI燃烧的主要特征参数。
+
+\begin{table}[htbp]
+	\centering
+	\caption{不同当量比下HCCI燃烧特征参数}
+	\label{tab:equivalence}
+	\begin{tabular}{cccc}
+		\toprule
+		当量比 & 着火时刻/CA & 峰值温度/K & 峰值压力/MPa \\
+		\midrule
+		0.2 & 3.5 & 1650 & 5.2 \\
+		0.3 & 1.8 & 1820 & 6.1 \\
+		0.4 & 0.5 & 1980 & 7.3 \\
+		0.5 & -0.8 & 2100 & 8.5 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\subsection{EGR的影响}
+
+废气再循环（EGR）是控制HCCI着火时刻的有效手段之一。图\ref{fig:egr_effect}给出了不同EGR率对着火时刻的影响。从图中可以看出，随着EGR率的增加，着火时刻推迟，这是因为EGR稀释了缸内混合气，降低了反应物浓度，同时提高了混合气的比热容。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{images/sdju-badge}
+	\caption{不同EGR率对着火时刻的影响}
+	\label{fig:egr_effect}
+\end{figure}

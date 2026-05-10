@@ -1,0 +1,27 @@
+\chapter{DME化学反应动力学机理}
+
+本文采用的DME详细化学反应动力学机理包含79个物种和399个基元反应。表\ref{tab:mechanism}列出了部分主要反应及其动力学参数。
+
+\begin{table}[htbp]
+	\centering
+	\caption{DME氧化主要反应及动力学参数}
+	\label{tab:mechanism}
+	\begin{tabular}{clcc}
+		\toprule
+		编号 & 反应 & $A$ & $E_a$/kJ·mol$^{-1}$ \\
+		\midrule
+		R1  & CH$_3$OCH$_3$ + OH $\rightarrow$ CH$_3$OCH$_2$ + H$_2$O & $2.40\times10^{6}$ & -3.24 \\
+		R2  & CH$_3$OCH$_2$ + O$_2$ $\rightarrow$ CH$_3$OCH$_2$O$_2$ & $1.70\times10^{12}$ & 0.00 \\
+		R3  & CH$_3$OCH$_2$O$_2$ $\rightarrow$ CH$_2$O + CH$_3$O + OH & $1.00\times10^{9}$ & 43.00 \\
+		R4  & CH$_3$OCH$_3$ + HO$_2$ $\rightarrow$ CH$_3$OCH$_2$ + H$_2$O$_2$ & $3.00\times10^{4}$ & 78.00 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+其中，$A$为指前因子，$E_a$为活化能。反应速率常数遵循Arrhenius公式：
+
+\begin{equation}
+	k = A T^n \exp\left(-\frac{E_a}{RT}\right)
+\end{equation}
+
+其中，$T$为温度，$n$为温度指数，$R$为通用气体常数。

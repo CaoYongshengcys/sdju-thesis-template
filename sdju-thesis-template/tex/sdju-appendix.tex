@@ -1,0 +1,154 @@
+\chapter{核心代码附录}
+
+\section{ResNet-50模型训练代码}
+
+以下为基于MindSpore框架的ResNet-50模型训练核心代码：
+
+\begin{codeblock}[language=Python, caption={ResNet-50模型训练代码}]
+import mindspore as ms
+from mindspore import nn, context, Tensor
+from mindspore.train import Model, LossMonitor
+from mindspore.dataset import vision, transforms
+from mindspore.dataset import Cifar10Dataset
+
+context.set_context(mode=context.GRAPH_MODE, device_target="GPU")
+
+# 数据预处理
+transform_train = transforms.Compose([
+    vision.RandomCrop(32, padding=4),
+    vision.RandomHorizontalFlip(),
+    vision.Resize(224),
+    vision.Normalize(mean=[0.4914, 0.4822, 0.4465],
+                     std=[0.2023, 0.1994, 0.2010]),
+    vision.HWC2CHW()
+])
+
+# 数据集加载
+dataset = Cifar10Dataset(dataset_dir="./cifar-10",
+    usage="train", shuffle=True)
+dataset = dataset.map(transform_train,
+    input_columns="image")
+dataset = dataset.batch(128)
+
+# 模型定义
+net = resnet50(num_classes=10)
+loss_fn = nn.CrossEntropyLoss()
+opt = nn.SGD(net.trainable_params(),
+    learning_rate=0.1, momentum=0.9,
+    weight_decay=5e-4)
+model = Model(net, loss_fn, opt)
+
+# 模型训练
+model.train(200, dataset,
+    callbacks=[LossMonitor(0.1)],
+    dataset_sink_mode=True)
+\end{codeblock}
+
+\section{INT8量化转换代码}
+
+以下为模型INT8后训练量化的核心代码：
+
+\begin{codeblock}[language=Python, caption={INT8量化转换代码}]
+from mindspore_lite import Converter
+
+converter = Converter()
+converter.set_config_file("./quantization.cfg")
+converter.set_model_file("resnet50.mindir")
+converter.set_output_file("resnet50_quant.ms")
+converter.set_weight_quant(True)
+converter.set_input_shape("input:1,3,224,224")
+converter.convert()
+\end{codeblock}
+
+\section{鸿蒙NAPI推理接口代码}
+
+以下为鸿蒙端侧推理引擎的NAPI接口核心代码：
+
+\begin{codeblock}[language=C++, caption={NAPI推理接口代码}]
+#include <mindspore/lite/model.h>
+#include <mindspore/lite/context.h>
+
+napi_value Predict(napi_env env, napi_callback_info info) {
+    // 获取输入数据
+    size_t argc = 2;
+    napi_value args[2];
+    napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
+
+    // 创建推理上下文
+    auto context = std::make_shared<mindspore::lite::Context>();
+    context->device_list_ = {{mindspore::lite::DT_CPU, {}}};
+    context->cpu_context_ = {
+        .enable_float16_ = false,
+        .thread_num_ = 4
+    };
+
+    // 创建模型并加载
+    auto model = mindspore::lite::Model::CreateModel(
+        model_path, context);
+
+    // 创建推理器
+    auto runner = mindspore::lite::ModelParallelRunner();
+    runner.Init(model_path, context);
+
+    // 执行推理
+    auto inputs = runner.GetInputs();
+    CopyInputData(inputs, input_buffer);
+    auto outputs = runner.Predict(inputs);
+
+    // 返回分类结果
+    napi_value result;
+    napi_create_string_utf8(env,
+        GetTopResult(outputs).c_str(),
+        NAPI_AUTO_LENGTH, &result);
+    return result;
+}
+\end{codeblock}
+
+\section{ArkTS界面核心代码}
+
+以下为鸿蒙ArkTS应用主界面的核心代码：
+
+\begin{codeblock}[caption={ArkTS主界面代码}]
+@Entry
+@Component
+struct IndexPage {
+  @State imagePath: string = ''
+  @State resultText: string = ''
+  @State confidenceList: number[] = []
+
+  build() {
+    Column() {
+      // 图片展示区域
+      Image(this.imagePath)
+        .width(300).height(300)
+        .objectFit(ImageFit.Cover)
+        .borderRadius(8)
+
+      // 分类按钮
+      Button('开始分类')
+        .width('80%').height(40)
+        .onClick(() => this.classifyImage())
+
+      // 分类结果展示
+      Text(this.resultText)
+        .fontSize(20).fontWeight(FontWeight.Bold)
+
+      // 置信度柱状图
+      ForEach(this.confidenceList,
+        (item: number, index: number) => {
+          Row() {
+            Progress({ value: item, total: 100 })
+              .width('60%').color('#007DFF')
+          }
+        })
+    }.width('100%').padding(20)
+  }
+
+  async classifyImage() {
+    let result = await mindsporeLite.predict(
+      this.imagePath)
+    this.resultText = result.topClass
+    this.confidenceList = result.confidences
+  }
+}
+\end{codeblock}

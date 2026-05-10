@@ -1,0 +1,259 @@
+\chapter{相关技术概述}
+
+本章对本文所涉及的关键技术进行概述，包括鸿蒙操作系统、MindSpore深度学习框架、深度学习与卷积神经网络、图像分类技术以及模型轻量化技术，为后续章节的系统设计与实现奠定理论基础。
+
+\section{鸿蒙操作系统}
+
+鸿蒙操作系统（HarmonyOS）是华为公司于2019年发布的一款面向全场景的分布式操作系统，旨在为不同类型的智能终端设备提供统一的操作系统平台\cite{huawei2021harmony}。与传统的单设备操作系统不同，鸿蒙系统从底层架构出发，以分布式设计理念为核心，实现了多设备之间的无缝协同。
+
+\subsection{分布式架构}
+
+鸿蒙系统采用分布式软总线、分布式数据管理和分布式任务调度三大核心技术，构建了统一的分布式基座。分布式软总线为不同设备之间提供了高速、低延迟的通信通道，支持Wi-Fi、蓝牙等多种连接协议的自适应切换。分布式数据管理实现了跨设备数据的透明访问和同步，应用程序无需感知数据存储的具体设备位置。分布式任务调度则支持将任务在多个设备间灵活迁移和协同执行，使得一个应用可以同时调度多个设备的硬件能力。
+
+在系统分层上，鸿蒙系统自下而上分为内核层、系统服务层、框架层和应用层。内核层采用Linux内核与LiteOS双内核设计，分别适配富设备（如手机、平板）和轻量设备（如手表、音箱）。系统服务层提供公共基础类库、多媒体、AI等系统服务。框架层为应用开发提供ArkTS/JS/C/C++等多语言API。应用层运行基于ArkTS开发的应用程序。
+
+\subsection{ArkTS语言}
+
+ArkTS是鸿蒙系统主推的应用开发语言，基于TypeScript进行了扩展和优化。ArkTS在TypeScript的基础上引入了声明式UI范式、状态管理和组件化等特性，使其更适合鸿蒙应用的开发。ArkTS采用静态类型检查，在编译期即可发现类型错误，提高了代码的健壮性。同时，ArkTS通过方舟编译器（ArkCompiler）进行 Ahead-of-Time（AOT）编译优化，将高级语言直接编译为机器码执行，相比传统的解释执行方式，运行效率显著提升。
+
+ArkTS的核心特性包括：（1）声明式UI描述，开发者通过声明式语法描述界面结构，框架自动完成界面更新；（2）响应式状态管理，当状态变量发生变化时，框架自动触发关联的UI组件刷新；（3）组件化开发，将界面拆分为可复用的自定义组件，提高开发效率和代码可维护性。
+
+\subsection{ArkUI框架}
+
+ArkUI是鸿蒙系统的声明式UI开发框架，为开发者提供了一套完整的UI开发解决方案。ArkUI采用声明式开发范式，开发者只需描述界面的最终状态，框架负责计算状态差异并高效更新界面。ArkUI提供了丰富的内置组件，包括Text、Image、List、Grid、Column、Row等基础组件，以及Button、TextInput、Slider等交互组件，满足常见的界面开发需求。
+
+在布局系统方面，ArkUI支持线性布局（Row/Column）、弹性布局（Flex）、栅格布局（Grid）、相对布局（RelativeContainer）等多种布局方式，开发者可以根据界面需求灵活选择。ArkUI还提供了动画和手势系统，支持属性动画、显式动画和转场动画，以及点击、长按、拖动、缩放等手势交互，使得应用界面更加流畅和自然。
+
+\subsection{Ability模型}
+
+Ability是鸿蒙系统中应用的基本功能单元，类似于Android中的Activity和Service的组合。鸿蒙系统的Ability模型分为FA（Feature Ability）模型和Stage模型两种。Stage模型是鸿蒙3.0之后推荐的新一代应用模型，以UIAbility和ExtensionAbility为核心组件。
+
+UIAbility是带有界面的Ability，负责界面的展示和用户交互。一个应用可以包含多个UIAbility，每个UIAbility拥有独立的生命周期和窗口。ExtensionAbility是无界面的Ability，用于提供特定的系统能力扩展，如ServiceExtension（后台服务）、DataShareExtension（数据共享）等。Stage模型通过AbilityStage管理UIAbility的生命周期，支持Ability的按需加载和回收，提高了系统资源的利用率。
+
+\section{MindSpore深度学习框架}
+
+MindSpore是华为公司开源的全场景AI计算框架，支持端、边、云多种场景下的模型训练、推理和部署\cite{mindspore2021lite}。MindSpore的设计理念是"全场景协同、极简开发、极致性能"，通过统一的IR（Intermediate Representation）实现模型在云侧训练和端侧推理之间的无缝衔接。
+
+\subsection{MindSpore架构}
+
+MindSpore的整体架构自下而上分为三层：模型层、表达层和运行时层。模型层提供了丰富的预置模型库和模型开发工具，支持计算机视觉、自然语言处理、推荐系统等领域的常用模型。表达层是MindSpore的核心，负责将用户编写的模型代码转换为计算图表示，并进行自动微分、自动并行等优化。运行时层负责计算图在具体硬件后端上的高效执行，支持Ascend、GPU、CPU等多种硬件后端。
+
+MindSpore采用"自动微分+自动并行"的技术路线。在自动微分方面，MindSpore提供了源码转换（Source-to-Source）方式的自动微分实现，能够对用户编写的Python代码进行自动求导，无需手动推导梯度公式。在自动并行方面，MindSpore能够根据集群配置和模型特征，自动搜索最优的数据并行、模型并行和流水线并行策略，降低了分布式训练的开发门槛。
+
+\subsection{自动微分机制}
+
+MindSpore的自动微分采用源码转换方式，将用户编写的前向计算代码转换为对应的反向梯度计算代码。其核心思想是对计算图中的每个基本操作注册对应的梯度函数，通过链式法则将各操作的梯度组合为完整的反向传播过程。
+
+对于复合函数$y = f_n \circ f_{n-1} \circ \cdots \circ f_1(x)$，根据链式法则，其梯度为：
+
+\begin{equation}
+	\frac{\partial y}{\partial x} = \frac{\partial f_n}{\partial f_{n-1}} \cdot \frac{\partial f_{n-1}}{\partial f_{n-2}} \cdots \frac{\partial f_1}{\partial x}
+	\label{eq:chain_rule}
+\end{equation}
+
+MindSpore在编译期将前向计算图转换为反向计算图，并对其进行算子融合、内存复用等优化，从而在运行时高效地计算梯度。相比基于运算符重载的自动微分方式，源码转换方式具有更低的运行时开销。
+
+\subsection{MindSpore Lite端侧推理框架}
+
+MindSpore Lite是MindSpore面向端侧设备的轻量化推理引擎，专为手机、IoT设备等资源受限场景设计\cite{mindspore2021lite}。MindSpore Lite的核心特性包括：
+
+（1）轻量级推理引擎。MindSpore Lite的核心运行时库体积仅约1MB，支持ARM CPU、ARM GPU、NPU等多种硬件后端，能够适配不同性能等级的端侧设备。
+
+（2）模型格式转换。MindSpore Lite提供了converter工具，支持将MindSpore、TensorFlow、ONNX、Caffe等框架训练的模型转换为.ms格式的端侧推理模型，同时支持在转换过程中进行模型量化。
+
+（3）推理优化。MindSpore Lite内置了算子融合、常量折叠、冗余节点消除等图优化策略，以及INT8/FP16混合精度推理能力，在保证推理精度的前提下显著提升推理速度。
+
+（4）NAPI集成。MindSpore Lite提供了鸿蒙系统的NAPI接口封装，开发者可以在ArkTS应用中通过NAPI调用MindSpore Lite的推理能力，实现端侧AI功能的无缝集成。
+
+\subsection{模型转换工具}
+
+MindSpore Lite的converter工具是连接云侧训练与端侧推理的桥梁。该工具支持将多种框架的模型文件转换为MindSpore Lite的.ms格式。在转换过程中，converter工具执行以下主要步骤：首先，解析源模型文件，构建统一的计算图表示；其次，对计算图进行优化，包括算子融合、常量折叠和冗余节点消除；然后，根据用户配置进行模型量化（如INT8量化）；最后，将优化后的计算图序列化为.ms格式文件。
+
+\section{深度学习与卷积神经网络}
+
+\subsection{卷积神经网络基础}
+
+卷积神经网络（Convolutional Neural Network, CNN）是深度学习中最具代表性的网络架构之一，特别适用于处理具有网格结构的数据，如图像和时序信号。CNN的核心思想是通过局部连接和权值共享机制，大幅减少网络参数量，同时保留数据的空间结构信息。
+
+一个典型的CNN由卷积层、激活函数、池化层和全连接层组成。卷积层通过卷积操作提取输入数据的局部特征，激活函数引入非线性变换，池化层降低特征图的空间维度，全连接层将提取的特征映射为最终的输出。
+
+\subsection{卷积运算}
+
+卷积运算是CNN的核心操作。对于输入特征图$\mathbf{X} \in \mathbb{R}^{H \times W \times C_{in}}$和卷积核$\mathbf{W} \in \mathbb{R}^{K \times K \times C_{in} \times C_{out}}$，二维卷积运算定义为：
+
+\begin{equation}
+	Y(i,j,c) = \sum_{m=0}^{K-1}\sum_{n=0}^{K-1}\sum_{c'=0}^{C_{in}-1} W(m,n,c',c) \cdot X(i+m, j+n, c') + b(c)
+	\label{eq:convolution}
+\end{equation}
+
+其中，$Y(i,j,c)$表示输出特征图在位置$(i,j)$、通道$c$上的值，$K$为卷积核大小，$C_{in}$和$C_{out}$分别为输入和输出通道数，$b(c)$为偏置项。卷积操作通过滑动窗口在输入特征图上逐位置计算，每次只关注局部区域，实现了局部感受野和权值共享。
+
+\subsection{池化操作}
+
+池化操作用于降低特征图的空间分辨率，减少计算量和参数量，同时增强特征的不变性。常用的池化操作包括最大池化和平均池化。最大池化选取窗口内的最大值作为输出：
+
+\begin{equation}
+	Y(i,j,c) = \max_{0 \le m < K, \, 0 \le n < K} X(i \cdot s + m, \, j \cdot s + n, \, c)
+	\label{eq:max_pooling}
+\end{equation}
+
+其中，$K$为池化窗口大小，$s$为步幅。平均池化则计算窗口内所有值的均值作为输出。池化操作在保留主要特征信息的同时，有效降低了特征图的空间维度，减少了后续层的计算量。
+
+\subsection{ResNet网络}
+
+随着网络深度的增加，深度神经网络面临梯度消失和网络退化问题。He等\cite{he2016deep}提出的ResNet通过引入残差连接（Residual Connection）有效解决了上述问题，使得训练超过100层的深层网络成为可能。ResNet在2015年ImageNet竞赛中获得了冠军，成为计算机视觉领域最具影响力的网络架构之一。
+
+残差连接的核心思想是在网络中引入跳跃连接（Skip Connection），使网络学习残差映射而非直接映射。对于期望的底层映射$\mathcal{H}(\mathbf{x})$，残差块让网络学习残差$\mathcal{F}(\mathbf{x}) = \mathcal{H}(\mathbf{x}) - \mathbf{x}$，则原始映射可表示为：
+
+\begin{equation}
+	\mathcal{H}(\mathbf{x}) = \mathcal{F}(\mathbf{x}) + \mathbf{x}
+	\label{eq:residual}
+\end{equation}
+
+其中，$\mathcal{F}(\mathbf{x})$表示残差映射，$\mathbf{x}$为恒等映射。在反向传播时，梯度可以通过跳跃连接直接传播到前面的层，有效缓解了梯度消失问题。
+
+ResNet-50是ResNet系列中最常用的变体之一，由49个卷积层和1个全连接层组成。其核心构建单元为瓶颈残差块（Bottleneck Block），采用$1 \times 1$、$3 \times 3$、$1 \times 1$的三层卷积结构：第一个$1 \times 1$卷积降维，$3 \times 3$卷积提取特征，第二个$1 \times 1$卷积升维。这种设计在减少计算量的同时保持了模型的表达能力。ResNet-50在ImageNet数据集上的Top-5准确率达到92.2\%，是图像分类任务中广泛使用的基准模型。
+
+\section{图像分类技术}
+
+\subsection{图像分类任务定义}
+
+图像分类是计算机视觉领域的基础任务，其目标是将输入图像分配到预定义的类别标签中。形式化地，给定输入图像$\mathbf{X}$和类别集合$\mathcal{C} = \{c_1, c_2, \ldots, c_N\}$，图像分类任务需要学习映射函数$f: \mathbf{X} \rightarrow \mathcal{C}$，使得$f(\mathbf{X})$尽可能接近图像的真实类别标签。在深度学习方法中，映射函数$f$由卷积神经网络参数化，网络输出各类别的概率分布，取概率最大的类别作为预测结果。
+
+\subsection{常用数据集}
+
+图像分类研究中常用的基准数据集包括：
+
+（1）ImageNet数据集。ImageNet是目前规模最大的图像分类基准数据集，包含超过1400万张图像和2万多个类别\cite{krizhevsky2012imagenet}。其子集ILSVRC-2012包含128万张训练图像、5万张验证图像和10万张测试图像，涵盖1000个类别，是评估大规模图像分类算法的标准基准。
+
+（2）CIFAR-10数据集。CIFAR-10是一个小规模图像分类数据集，包含60000张$32 \times 32$的彩色图像，分为飞机、汽车、鸟、猫、鹿、狗、青蛙、马、船和卡车共10个类别，每个类别6000张图像。其中50000张用于训练，10000张用于测试。CIFAR-10因其适中的规模和多样的类别，被广泛用于算法验证和教学实验。
+
+\subsection{评价指标}
+
+图像分类任务常用的评价指标包括准确率、精确率、召回率和F1值。对于二分类问题，设TP、TN、FP、FN分别表示真正例、真负例、假正例和假负例的数量，各指标定义如下：
+
+准确率（Accuracy）表示所有样本中被正确分类的比例：
+
+\begin{equation}
+	\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+	\label{eq:accuracy}
+\end{equation}
+
+精确率（Precision）表示预测为正类的样本中实际为正类的比例：
+
+\begin{equation}
+	\text{Precision} = \frac{TP}{TP + FP}
+	\label{eq:precision}
+\end{equation}
+
+召回率（Recall）表示实际为正类的样本中被正确预测为正类的比例：
+
+\begin{equation}
+	\text{Recall} = \frac{TP}{TP + FN}
+	\label{eq:recall}
+\end{equation}
+
+F1值是精确率和召回率的调和平均值，综合反映分类器的性能：
+
+\begin{equation}
+	\text{F1} = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+	\label{eq:f1}
+\end{equation}
+
+对于多分类问题，通常采用宏平均（Macro-average）或微平均（Micro-average）的方式将各类别的指标进行汇总。宏平均先计算每个类别的指标再求均值，微平均则先汇总所有类别的TP、FP、FN再计算全局指标。
+
+\section{模型轻量化技术}
+
+端侧设备的计算资源和存储容量有限，直接部署大规模深度学习模型面临推理速度慢、内存占用大等问题。模型轻量化技术旨在在保持模型精度的前提下，降低模型的计算量和参数量，使其能够在资源受限的端侧设备上高效运行\cite{han2015deep}。
+
+\subsection{模型量化}
+
+模型量化是将模型中高精度的浮点数参数（如FP32）转换为低精度表示（如INT8、INT4）的技术\cite{jacob2018quantization}。量化可以显著减少模型的存储空间和内存带宽需求，同时利用硬件的整数运算单元加速推理过程。
+
+INT8量化是最常用的量化方案，将FP32的权重和激活值映射到INT8的表示范围$[-128, 127]$。线性对称量化的映射公式为：
+
+\begin{equation}
+	q = \text{round}\left(\frac{r}{S}\right), \quad S = \frac{\max(|r_{\max}|, |r_{\min}|)}{127}
+	\label{eq:quantization}
+\end{equation}
+
+其中，$r$为原始浮点值，$q$为量化后的整数值，$S$为量化步长。反量化过程为$r \approx S \cdot q$。
+
+量化方法可分为训练后量化（Post-Training Quantization, PTQ）和量化感知训练（Quantization-Aware Training, QAT）两种。PTQ直接对训练好的FP32模型进行量化，无需重新训练，实现简单但可能带来一定的精度损失。QAT在训练过程中模拟量化操作，使模型适应低精度表示，精度损失更小但训练成本更高。表\ref{tab:quantization}对比了两种量化方法的特点。
+
+\begin{table}[htbp]
+	\centering
+	\caption{训练后量化与量化感知训练对比}
+	\label{tab:quantization}
+	\begin{tabular}{lcc}
+		\toprule
+		对比项 & 训练后量化（PTQ） & 量化感知训练（QAT） \\
+		\midrule
+		是否需要训练数据 & 少量校准数据 & 完整训练数据 \\
+		是否需要重新训练 & 否 & 是 \\
+		实现复杂度 & 低 & 较高 \\
+		精度损失 & 较大 & 较小 \\
+		适用场景 & 快速部署 & 精度敏感场景 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\subsection{知识蒸馏}
+
+知识蒸馏是由Hinton等\cite{hinton2015distilling}提出的一种模型压缩方法，其核心思想是利用大型教师模型（Teacher Model）的知识来指导小型学生模型（Student Model）的训练，使小模型在保持轻量化的同时获得接近大模型的性能。
+
+知识蒸馏的关键在于软标签（Soft Label）的引入。教师模型的输出经过温度参数$T$调整后的softmax函数产生软标签：
+
+\begin{equation}
+	p_i = \frac{\exp(z_i / T)}{\sum_{j} \exp(z_j / T)}
+	\label{eq:softmax_temperature}
+\end{equation}
+
+其中，$z_i$为第$i$个类别的logits输出，$T$为温度参数。当$T > 1$时，softmax输出的概率分布更加平滑，包含了类别间相似性的暗知识（Dark Knowledge）。学生模型的训练损失由蒸馏损失和硬标签损失两部分组成：
+
+\begin{equation}
+	\mathcal{L} = \alpha \cdot \mathcal{L}_{\text{soft}}(p^S, p^T) + (1 - \alpha) \cdot \mathcal{L}_{\text{hard}}(p^S, y)
+	\label{eq:distillation_loss}
+\end{equation}
+
+其中，$p^S$和$p^T$分别为学生模型和教师模型的软标签输出，$y$为真实标签，$\alpha$为损失权重系数。通过知识蒸馏，学生模型不仅学习到了训练数据的标签信息，还学习到了教师模型对类别间关系的理解，从而在参数量大幅减少的情况下仍能保持较高的分类精度。
+
+\subsection{模型剪枝}
+
+模型剪枝是通过移除神经网络中冗余的参数或结构来降低模型复杂度的技术\cite{han2015deep}。根据剪枝粒度的不同，可分为非结构化剪枝和结构化剪枝两类。
+
+非结构化剪枝以单个权重为粒度进行剪枝，将绝对值小于某个阈值的权重置为零。设原始权重矩阵为$\mathbf{W}$，剪枝后的权重$\mathbf{W}'$为：
+
+\begin{equation}
+	W'_{i,j} = \begin{cases} W_{i,j}, & \text{if } |W_{i,j}| > \tau \\ 0, & \text{otherwise} \end{cases}
+	\label{eq:pruning}
+\end{equation}
+
+其中，$\tau$为剪枝阈值。非结构化剪枝能够实现极高的压缩率，但剪枝后的权重矩阵变为稀疏矩阵，需要专门的稀疏计算库或硬件支持才能获得实际的加速效果。
+
+结构化剪枝以通道或层为粒度进行剪枝，直接移除整个卷积通道或全连接层，剪枝后的模型仍然是稠密的，无需专门的稀疏计算支持即可在通用硬件上获得加速。结构化剪枝的关键是评估各通道的重要性，常用的评估准则包括L1范数、L2范数、几何中位数等。
+
+表\ref{tab:lightweight}对比了几种主流轻量化模型的关键参数。
+
+\begin{table}[htbp]
+	\centering
+	\caption{主流轻量化模型对比}
+	\label{tab:lightweight}
+	\begin{tabular}{lccc}
+		\toprule
+		模型 & 参数量/M & 计算量/MFLOPs & ImageNet Top-1准确率/\% \\
+		\midrule
+		MobileNet V1\cite{howard2017mobilenets} & 4.2 & 569 & 70.6 \\
+		MobileNet V2 & 3.4 & 300 & 72.0 \\
+		ShuffleNet V1 & 2.3 & 140 & 67.8 \\
+		ShuffleNet V2 & 2.3 & 146 & 69.4 \\
+		ResNet-50\cite{he2016deep} & 25.6 & 4132 & 76.1 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+从表\ref{tab:lightweight}可以看出，轻量化模型通过精心设计网络结构，在参数量和计算量大幅减少的情况下仍能保持较高的分类精度。在实际应用中，通常将模型轻量化技术组合使用，例如先通过结构化剪枝移除冗余通道，再通过知识蒸馏恢复精度，最后通过INT8量化进一步压缩模型，以实现端侧设备上的高效部署。
+
+\section{本章小结}
+
+本章对本文涉及的关键技术进行了系统概述。首先介绍了鸿蒙操作系统的分布式架构、ArkTS语言、ArkUI框架和Ability模型；然后阐述了MindSpore框架的架构设计、自动微分机制和MindSpore Lite端侧推理引擎；接着介绍了卷积神经网络的基本原理和ResNet残差网络的核心思想；随后概述了图像分类任务的定义、常用数据集和评价指标；最后详细讨论了模型量化、知识蒸馏和模型剪枝三种轻量化技术。上述技术为本文智能图像分类应用的设计与实现提供了理论和技术基础。

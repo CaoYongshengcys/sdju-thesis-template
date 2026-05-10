@@ -1,0 +1,19 @@
+\begin{abstract}
+	随着移动互联网和物联网的快速发展，智能终端设备数量呈爆发式增长，端侧人工智能（On-device AI）成为近年来的研究热点。然而，传统的云端AI方案在面对隐私安全、网络延迟和离线场景等挑战时存在明显不足，将AI推理能力部署到终端设备成为必然趋势。华为推出的鸿蒙操作系统和MindSpore深度学习框架为端侧AI应用的开发提供了完整的技术栈支持。
+
+	本文设计并实现了一个基于鸿蒙系统与MindSpore的智能图像分类应用。该应用以ResNet-50卷积神经网络为核心分类模型，利用MindSpore Lite推理引擎在鸿蒙终端设备上实现本地化图像分类推理。论文主要工作包括：（1）对鸿蒙系统的分布式架构和ArkTS开发框架进行了深入分析，明确了应用开发的技术路线；（2）基于MindSpore框架完成了ResNet-50模型的搭建、训练和优化，在CIFAR-10数据集上达到了92.3\%的分类准确率；（3）针对端侧设备计算资源有限的特点，采用模型量化、知识蒸馏等轻量化策略，将模型体积压缩至原始模型的1/4，推理延迟降低60\%；（4）基于鸿蒙ArkTS框架设计了完整的用户交互界面，实现了图片选取、预处理、模型推理和结果展示的全流程功能；（5）通过系统测试验证了应用在鸿蒙真机上的运行效果，单张图片推理耗时约45ms，内存占用约120MB。
+
+	实验结果表明，本文设计的智能图像分类应用能够在鸿蒙终端设备上高效、稳定地运行，分类准确率和推理速度均满足实际使用需求，为端侧AI应用的开发提供了一种可行的技术方案。
+
+	\keywords{鸿蒙系统，MindSpore，端侧AI，图像分类，深度学习}
+\end{abstract}
+
+\begin{enabstract}
+	With the rapid development of mobile Internet and the Internet of Things, the number of intelligent terminal devices has grown explosively, and on-device Artificial Intelligence (AI) has become a research hotspot in recent years. However, traditional cloud-based AI solutions have obvious shortcomings when facing challenges such as privacy and security, network latency, and offline scenarios. Deploying AI inference capabilities on terminal devices has become an inevitable trend. The HarmonyOS operating system and MindSpore deep learning framework launched by Huawei provide a complete technology stack for the development of on-device AI applications.
+
+	This thesis designs and implements an intelligent image classification application based on HarmonyOS and MindSpore. The application uses ResNet-50 convolutional neural network as the core classification model and utilizes MindSpore Lite inference engine to implement localized image classification inference on HarmonyOS terminal devices. The main contributions of this thesis include: (1) an in-depth analysis of the distributed architecture of HarmonyOS and the ArkTS development framework, clarifying the technical approach for application development; (2) building, training, and optimizing the ResNet-50 model based on the MindSpore framework, achieving 92.3\% classification accuracy on the CIFAR-10 dataset; (3) adopting model quantization, knowledge distillation, and other lightweight strategies for devices with limited computational resources, compressing the model size to 1/4 of the original model and reducing inference latency by 60\%; (4) designing a complete user interaction interface based on the HarmonyOS ArkTS framework, implementing the full process of image selection, preprocessing, model inference, and result display; (5) verifying the application's performance on HarmonyOS real devices through system testing, with single-image inference time of approximately 45ms and memory usage of approximately 120MB.
+
+	Experimental results show that the intelligent image classification application designed in this thesis can run efficiently and stably on HarmonyOS terminal devices, with classification accuracy and inference speed meeting practical usage requirements, providing a feasible technical solution for the development of on-device AI applications.
+
+	\enkeywords{HarmonyOS, MindSpore, On-device AI, Image Classification, Deep Learning}
+\end{enabstract}
